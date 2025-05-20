@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+/* Navbar */
+.navbar {
+  background: black;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #fff;
+  z-index: 10;
+  position: sticky;
+  margin: 0;
+}
+
+.logo {
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.userSection {
+  align-self: center;
+}
+.loginBtn {
+  position: relative;
+  font-weight: bold;
+  font-size: 1.5rem;
+  align-self: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+
+.loginBtn::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background-color: white;
+  transition: width 0.3s ease-in-out;
+}
+.loginBtn:hover::after {
+  width: 100%;
+}
+
+.avatar {
+  width: 100%;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+}

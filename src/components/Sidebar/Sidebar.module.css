@@ -1,0 +1,88 @@
+.sidebar {
+  width: 15%;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 20px;
+}
+
+.sidebar_header {
+  width: 100%;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.newChatBtn {
+  width: 100%;
+  background-color: #444;
+  padding: 10px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.chatList {
+  width: 90%;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatItemWrapper {
+  width: 100%;
+  position: relative;
+  align-self: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: lightslategray;
+  margin-bottom: 10px;
+}
+
+.chatItem {
+  flex: 1;
+  text-decoration: none;
+  color: white;
+  overflow: hidden;
+}
+.menuBtn {
+  font-size: 1.5rem;
+  border: none;
+  position: relative;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #222;
+  border: 1px solid #444;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+}
+
+.dropdown button {
+  padding: 6px 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown button:hover {
+  background-color: #333;
+}
