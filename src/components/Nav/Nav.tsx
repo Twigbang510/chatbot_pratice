@@ -9,8 +9,8 @@ const Nav: React.FC = () => {
   };
   return (
     <header className={styles.navbar}>
-      <a href="#" className={styles.logo}>
-        🧠{" "}
+      <a href="/chat" className={styles.logo}>
+        🧠
       </a>
       <Avatar isLoggedIn={isLoggedIn} onLoginClick={handleLogin} />
     </header>

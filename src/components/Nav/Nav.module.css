@@ -4,10 +4,10 @@
 }
 /* Navbar */
 .navbar {
-  background: black;
+  background-color: transparent;
   display: flex;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 0.75rem;
   border-bottom: 1px solid #fff;
   z-index: 10;
   position: sticky;
@@ -17,7 +17,7 @@
 .logo {
   font-weight: bold;
   text-decoration: none;
-  font-size: 2rem;
+  font-size: 25px;
   cursor: pointer;
 }
 
@@ -54,6 +54,7 @@
 .avatar {
   width: 100%;
   border-radius: 50%;
-  border: 2px solid white;
   cursor: pointer;
+  width: 28px;
+  height: 28px;
 }

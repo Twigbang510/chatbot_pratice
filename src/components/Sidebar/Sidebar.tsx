@@ -1,38 +1,33 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Sidebar.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { v4 as uuid } from "uuid";
+import { getChatSession } from "../../utils/storage";
+import { createNewChatSession } from "../../utils/chat";
+import type { RootState } from "../../hooks/store";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  getChatSession,
+  addChatSession,
   removeChatSession,
-  saveChatSession,
-} from "../../utils/storage";
-import { ChatSession } from "../../types/chat";
-const Sidebar: React.FC = () => {
+  setChatSession,
+} from "../../hooks/slices/chatSlice";
+const Sidebar = ({ visible, onToggle }: SidebarProps) => {
   const navigate = useNavigate();
-  const [sessions, setSession] = useState<ChatSession[]>([]);
+  const dispatch = useDispatch();
+  const sessions = useSelector((state: RootState) => state.chat.chatSession);
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const handleNewChat = () => {
-    const newId = uuid();
-    const session: ChatSession = {
-      id: newId,
-      title: "New Chat",
-      createAt: Date.now(),
-    };
-    saveChatSession(session);
-    setSession((prev) => [session, ...prev]);
-
+    const { newId, session } = createNewChatSession();
+    dispatch(addChatSession(session));
     navigate(`/chat/${newId}`);
   };
   const handleDeleteChat = (id: string) => {
     const confirm = window.confirm("Are you really want to delete this chat");
-    if (!confirm) {
-      return;
-    }
-    removeChatSession(id);
+    if (!confirm) return;
+    dispatch(removeChatSession(id));
     const remaining = getChatSession();
+    dispatch(setChatSession(remaining));
     setMenuOpenId(null);
-    setSession(remaining);
+
     if (remaining.length > 0) {
       navigate(`/chat/${remaining[0].id}`, { replace: true });
     } else {
@@ -41,15 +36,29 @@ const Sidebar: React.FC = () => {
   };
   useEffect(() => {
     const stored = getChatSession();
-    setSession(stored);
-  }, []);
+    dispatch(setChatSession(stored));
+  }, [dispatch]);
 
   return (
-    <aside className={styles.sidebar}>
+    <aside
+      className={`${styles.sidebar} ${visible ? styles.hiddenSidebar : ""}`}
+    >
       <div className={styles.sidebar_header}>
-        <button className={styles.newChatBtn} onClick={handleNewChat}>
-          New chat
+        <button className={styles.toggleBtn} onClick={onToggle}>
+          ☰
         </button>
+        <div className={styles.headerActions}>
+          <button className={styles.iconBtn} title="Search">
+            🔍
+          </button>
+          <button
+            className={styles.iconBtn}
+            onClick={handleNewChat}
+            title="New Chat"
+          >
+            ➕
+          </button>
+        </div>
       </div>
       <ul className={styles.chatList}>
         {sessions.map((chat) => (

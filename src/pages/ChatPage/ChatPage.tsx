@@ -1,33 +1,41 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./ChatPage.module.css";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { Message } from "../../types/message";
 import MessageBubble from "../../components/Chat/MessageBubble";
 import ChatInput from "../../components/Chat/ChatInput";
 import { getChatMessage, saveChatMessage } from "../../utils/storage";
+import { createNewChatSession } from "../../utils/chat";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../hooks/store";
+import {
+  openChat,
+  sendMessage,
+  sendMessageAsync,
+  startNewChatWithText,
+} from "../../hooks/slices/chatSlice";
+import { useAppDispatch } from "../../hooks/hooks";
 const ChatPage = () => {
-  const { chatId } = useParams<{ chatId: string }>();
-  const [messages, setMessage] = useState<Message[]>([]);
+  const { chatId } = useParams<{ chatId: string | "" }>();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const currentChatId = useSelector((state: RootState) => state.chat.chatId);
+  const messages = useSelector(
+    (state: RootState) => state.chat.messagesByChatId[chatId!] || [],
+  );
   useEffect(() => {
-    const existed = getChatMessage(chatId!);
-    setMessage(existed);
-  }, [chatId]);
-  const handleSend = (text: string) => {
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      sender: "user",
-      content: text,
-      timestamp: Date.now(),
-    };
-    const botMsg: Message = {
-      id: Date.now().toString() + "-bot",
-      sender: "bot",
-      content: "im bot",
-      timestamp: Date.now(),
-    };
-    const newMsg = [...messages, userMsg, botMsg];
-    setMessage(newMsg);
-    saveChatMessage(chatId!, newMsg);
+    if (chatId) {
+      dispatch(openChat(chatId));
+    } else {
+      navigate(`/chat/${currentChatId}`);
+    }
+  }, [chatId, currentChatId]);
+  const handleSend = (content: string) => {
+    if (!chatId) {
+      dispatch(startNewChatWithText(content));
+      return;
+    }
+    dispatch(sendMessageAsync({ chatId, content }));
   };
 
   return chatId ? (

@@ -22,8 +22,9 @@ export const saveChatMessage = (chatId: string, message: Message[]) => {
   localStorage.setItem(`chat_message_${chatId}`, JSON.stringify(message));
 };
 
-export const removeChatSession = (chatId: string) => {
+export const removeChatSession = (chatId: string): ChatSession[] => {
   const updated = getChatSession().filter((s) => s.id !== chatId);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   localStorage.removeItem(`chat_message_${chatId}`);
+  return updated;
 };

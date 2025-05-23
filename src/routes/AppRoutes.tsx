@@ -7,6 +7,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Navigate to="/chat/" />} />
 
+      <Route path="/chat" element={<ChatPage />} />
       <Route path="/chat/:chatId" element={<ChatPage />} />
       <Route path="*" element={<h4> 404 - Page Not Found </h4>} />
     </Routes>
