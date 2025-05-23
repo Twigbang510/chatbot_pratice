@@ -1,26 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "./ChatPage.module.css";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { Message } from "../../types/message";
+import { useNavigate, useParams } from "react-router-dom";
 import MessageBubble from "../../components/Chat/MessageBubble";
 import ChatInput from "../../components/Chat/ChatInput";
-import { getChatMessage, saveChatMessage } from "../../utils/storage";
-import { createNewChatSession } from "../../utils/chat";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../hooks/store";
 import {
   openChat,
-  sendMessage,
   sendMessageAsync,
   startNewChatWithText,
 } from "../../hooks/slices/chatSlice";
-import { useAppDispatch } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 const ChatPage = () => {
   const { chatId } = useParams<{ chatId: string | "" }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const currentChatId = useSelector((state: RootState) => state.chat.chatId);
-  const messages = useSelector(
+  const currentChatId = useAppSelector((state: RootState) => state.chat.chatId);
+  const messages = useAppSelector(
     (state: RootState) => state.chat.messagesByChatId[chatId!] || [],
   );
   useEffect(() => {
@@ -29,7 +24,7 @@ const ChatPage = () => {
     } else {
       navigate(`/chat/${currentChatId}`);
     }
-  }, [chatId, currentChatId]);
+  }, [chatId, currentChatId, dispatch, navigate]);
   const handleSend = (content: string) => {
     if (!chatId) {
       dispatch(startNewChatWithText(content));
@@ -45,7 +40,9 @@ const ChatPage = () => {
           <MessageBubble key={msg.id} {...msg}></MessageBubble>
         ))}
       </div>
-      <ChatInput onSend={handleSend} />
+      <div className={styles.inputSection}>
+        <ChatInput onSend={handleSend} />
+      </div>
     </div>
   ) : (
     <div className={styles.chatPage}>

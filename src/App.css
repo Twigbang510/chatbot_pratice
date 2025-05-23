@@ -1,9 +1,15 @@
 .mainSection {
+  height: 100vh;
+  width: 100%;
+  position: relative;
   display: flex;
 }
 .chatSection {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  flex: 1;
+  height: 100vh;
+  transition: all 0.3s ease;
   background-color: #212121;
+  z-index: 111;
 }

@@ -1,27 +1,31 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatState } from "../../types/chat_slice";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { current, type PayloadAction } from "@reduxjs/toolkit";
+import type { ChatState } from "../../types/chat_slice";
 import {
   getChatMessage,
   saveChatMessage,
   removeChatSession as removeChatSessionStorage,
+  updateChatSession,
 } from "../../utils/storage";
 import type { Message } from "../../types/message";
 import { createNewChatSession, createNewMessage } from "../../utils/chat";
-import { ChatSession } from "../../types/chat";
+import type { ChatSession } from "../../types/chat";
 import { callOpenAi } from "../../utils/openai";
 
 const initialState: ChatState = {
   chatId: "",
   messagesByChatId: {},
   chatSession: [],
+  sidebarVisible: true,
   isLoading: false,
+  editTitleId: null,
+  newTitle: "",
   error: null,
 };
 export const sendMessageAsync = createAsyncThunk(
   "chat/sendMessageAsync",
   async ({ chatId, content }: { chatId: string; content: string }) => {
     const userMsg = createNewMessage(content);
-    console.log("11111111");
     const res = await callOpenAi(content);
 
     const now = Date.now();
@@ -45,15 +49,6 @@ const chatSlice = createSlice({
       state.messagesByChatId[chatId] = storeMessages;
     },
 
-    //   action: PayloadAction<{ chatId: string; content: string }>,
-    // ) => {
-    //   const { chatId, content } = action.payload;
-    //   const newMsg = createNewMessage(content);
-    //   const currentMsg = state.messagesByChatId[chatId] || [];
-    //   const updatedMsg = [...currentMsg, ...newMsg];
-    //   state.messagesByChatId[chatId] = updatedMsg;
-    //   saveChatMessage(chatId, updatedMsg);
-    // },
     startNewChatWithText: (state, action: PayloadAction<string>) => {
       const content = action.payload;
       const { newId, messages, session } = createNewChatSession(content);
@@ -69,6 +64,29 @@ const chatSlice = createSlice({
     },
     removeChatSession: (state, action: PayloadAction<string>) => {
       const updated = removeChatSessionStorage(action.payload);
+      state.chatSession = updated;
+    },
+    toggleSidebar: (state) => {
+      state.sidebarVisible = !state.sidebarVisible;
+    },
+
+    editChatSessionTitle: (
+      state,
+      action: PayloadAction<{ id: string | null; newTitle: string }>,
+    ) => {
+      const { id, newTitle } = action.payload;
+      state.editTitleId = id;
+      state.newTitle = newTitle;
+      console.log(current(state.chatSession));
+      const updated = state.chatSession.map((s) => {
+        if (s.id === id) {
+          console.log("s", current(s));
+          return { ...s, title: newTitle };
+        }
+        return s;
+      });
+      console.log(updated);
+      updateChatSession(updated);
       state.chatSession = updated;
     },
   },
@@ -95,10 +113,11 @@ const chatSlice = createSlice({
 
 export const {
   openChat,
-  // sendMessage,
   startNewChatWithText,
   setChatSession,
   addChatSession,
   removeChatSession,
+  toggleSidebar,
+  editChatSessionTitle,
 } = chatSlice.actions;
 export default chatSlice.reducer;

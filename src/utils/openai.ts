@@ -6,7 +6,6 @@ const HEADER = {
   "Content-Type": "application/json",
 };
 export const callOpenAi = async (content: string): Promise<string> => {
-  console.log("api key", apiKey);
   const res = await fetch(`${BASE_URL}`, {
     method: "POST",
     headers: HEADER,
@@ -20,8 +19,6 @@ export const callOpenAi = async (content: string): Promise<string> => {
       ],
     }),
   });
-  console.log("222222222");
   const data = await res.json();
-  console.log(data);
   return data.choices?.[0]?.message?.content ?? "(No response)";
 };

@@ -16,14 +16,17 @@ const ChatInput = ({ onSend }: Props) => {
   };
   return (
     <div className={styles.inputArea}>
-      <input
-        type="text"
+      <textarea
         placeholder="Start chat with bot"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
         role="textbox"
-      ></input>
+        className={styles.chatInput}
+      ></textarea>
+      <button className={styles.sendBtn} onClick={handleSend}>
+        📤
+      </button>
     </div>
   );
 };

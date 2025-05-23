@@ -13,6 +13,11 @@ export const saveChatSession = (session: ChatSession) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 };
 
+export const updateChatSession = (session: ChatSession[]) => {
+  const updated = session;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+};
+
 export const getChatMessage = (chatId: string) => {
   const raw = localStorage.getItem(`chat_message_${chatId}`);
   return raw ? JSON.parse(raw) : [];

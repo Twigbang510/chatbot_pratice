@@ -2,13 +2,14 @@ import { v4 as uuid } from "uuid";
 import { ChatSession } from "../types/chat";
 import { Message } from "../types/message";
 import { saveChatMessage, saveChatSession } from "./storage";
+import { sendMessageAsync } from "../hooks/slices/chatSlice";
 
 export function createNewChatSession(firstMsg?: string): {
   newId: string;
   messages: Message[];
   session: ChatSession;
 } {
-  const newId = uuid();
+  const newId: string = uuid();
   const now = Date.now();
 
   const messages: Message[] = [];
